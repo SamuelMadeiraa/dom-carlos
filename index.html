@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Don Carlos Barbearia | Estilo & Tradição</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Inter:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --gold: #FDB813;
+            --dark: #050505;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--dark); 
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+        .text-gold { color: var(--gold); }
+        .bg-gold { background-color: var(--gold); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        /* Effects */
+        .glass { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px); }
+        
+        .btn-outline {
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 20px rgba(253, 184, 19, 0.4);
+        }
+
+        .float-whatsapp {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--gold);
+            z-index: 1000;
+            width: 0%;
+        }
+
+        .reveal { opacity: 0; }
+    </style>
+</head>
+<body class="flex min-h-screen">
+
+    <div id="progress-bar" class="scroll-progress"></div>
+
+    <a href="https://wa.me/554896622872" target="_blank" class="float-whatsapp bg-green-600 p-4 rounded-full text-white shadow-2xl">
+        <i data-lucide="message-circle" class="w-8 h-8 fill-current"></i>
+    </a>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 glass border-r border-zinc-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-500 ease-in-out">
+        <div class="flex flex-col h-full p-8">
+            <div class="mb-12 flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-black font-oswald italic tracking-tighter text-white">DON <span class="text-gold">CARLOS</span></h1>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-[0.4em] mt-1">Sertão do Maruim</p>
+                </div>
+                <button onclick="toggleSidebar()" class="lg:hidden text-zinc-400"><i data-lucide="x"></i></button>
+            </div>
+
+            <nav class="space-y-4 flex-1">
+                <a href="#home" onclick="toggleSidebar()" class="group flex items-center gap-4 p-3 rounded-lg hover:bg-zinc-900 transition text-zinc-400 hover:text-gold">
+                    <i data-lucide="home" class="w-5 h-5"></i> <span class="font-bold uppercase text-xs tracking-widest">Início</span>
+                </a>
+                <a href="#diferenciais" onclick="toggleSidebar()" class="group flex items-center gap-4 p-3 rounded-lg hover:bg-zinc-900 transition text-zinc-400 hover:text-gold">
+                    <i data-lucide="award" class="w-5 h-5"></i> <span class="font-bold uppercase text-xs tracking-widest">Diferenciais</span>
+                </a>
+                <a href="#servicos" onclick="toggleSidebar()" class="group flex items-center gap-4 p-3 rounded-lg hover:bg-zinc-900 transition text-zinc-400 hover:text-gold">
+                    <i data-lucide="scissors" class="w-5 h-5"></i> <span class="font-bold uppercase text-xs tracking-widest">Serviços</span>
+                </a>
+                <a href="#localizacao" onclick="toggleSidebar()" class="group flex items-center gap-4 p-3 rounded-lg hover:bg-zinc-900 transition text-zinc-400 hover:text-gold">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i> <span class="font-bold uppercase text-xs tracking-widest">Localização</span>
+                </a>
+            </nav>
+
+            <div class="mt-auto border-t border-zinc-800 pt-6">
+                <a href="https://wa.me/554896622872" class="block w-full text-center bg-gold text-black font-black py-4 rounded-md font-oswald uppercase tracking-widest hover:scale-105 transition">
+                    Agendar Horário
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 lg:ml-72 flex flex-col">
+        
+        <header class="lg:hidden p-5 flex justify-between items-center bg-black/90 backdrop-blur sticky top-0 z-40 border-b border-zinc-900">
+            <span class="font-oswald font-bold text-gold tracking-widest text-xl uppercase">Don Carlos</span>
+            <button onclick="toggleSidebar()" class="p-2 text-gold"><i data-lucide="menu"></i></button>
+        </header>
+
+        <section id="home" class="relative h-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070')] bg-cover bg-fixed bg-center">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+            <div class="relative z-10 text-center px-6">
+                <div class="animate__animated animate__zoomIn mb-4 inline-block bg-gold/10 px-4 py-1 rounded-full border border-gold/20">
+                    <span class="text-gold text-xs font-bold uppercase tracking-[0.2em]">O melhor de São José - SC</span>
+                </div>
+                <h2 class="text-6xl md:text-9xl font-black font-oswald uppercase leading-[0.85] mb-6 animate__animated animate__fadeInDown">
+                    TRADIÇÃO <br> <span class="text-gold">& ESTILO.</span>
+                </h2>
+                <p class="max-w-2xl mx-auto text-zinc-300 text-lg md:text-xl font-light italic mb-10 animate__animated animate__fadeInUp">
+                    Rua José Mathias Zimmermann, 133. Sua autoestima em boas mãos.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center animate__animated animate__fadeInUp" style="animation-delay: 0.5s;">
+                    <a href="#servicos" class="btn-outline px-10 py-4 font-bold uppercase text-sm tracking-widest">Nossos Serviços</a>
+                    <a href="https://wa.me/554896622872" target="_blank" class="bg-white text-black px-10 py-4 font-bold uppercase text-sm tracking-widest hover:bg-gold transition">Conversar Agora</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="diferenciais" class="py-24 bg-zinc-950 px-6">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                <div class="space-y-4 reveal">
+                    <i data-lucide="wifi" class="w-12 h-12 text-gold mx-auto"></i>
+                    <h4 class="font-oswald uppercase text-xl font-bold">Wi-Fi Free</h4>
+                    <p class="text-zinc-500 text-sm italic">Sempre conectado enquanto cuidamos de você.</p>
+                </div>
+                <div class="space-y-4 reveal" style="transition-delay: 150ms;">
+                    <i data-lucide="thermometer-snowflake" class="w-12 h-12 text-gold mx-auto"></i>
+                    <h4 class="font-oswald uppercase text-xl font-bold">Ar Climatizado</h4>
+                    <p class="text-zinc-500 text-sm italic">Conforto térmico em todas as estações.</p>
+                </div>
+                <div class="space-y-4 reveal" style="transition-delay: 300ms;">
+                    <i data-lucide="credit-card" class="w-12 h-12 text-gold mx-auto"></i>
+                    <h4 class="font-oswald uppercase text-xl font-bold">Pagamento Fácil</h4>
+                    <p class="text-zinc-500 text-sm italic">Aceitamos Pix, Cartão e Dinheiro.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="servicos" class="py-24 px-6 bg-black">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                    <div>
+                        <h3 class="text-gold font-bold uppercase tracking-widest text-sm mb-4">Escolha seu estilo</h3>
+                        <h2 class="text-5xl font-oswald font-black uppercase">Serviços <span class="text-zinc-800 italic">Premium</span></h2>
+                    </div>
+                    <p class="text-zinc-500 max-w-sm italic">Especialistas em barboterapia e cortes modernos.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
+                    <div class="group bg-zinc-900/50 p-10 rounded-2xl border border-zinc-800 hover:border-gold transition-all duration-500 reveal">
+                        <i data-lucide="scissors" class="w-10 h-10 text-gold mb-8 group-hover:rotate-12 transition"></i>
+                        <h4 class="text-2xl font-oswald uppercase font-bold mb-4">Corte de Cabelo</h4>
+                        <p class="text-zinc-500 text-sm mb-8">Do clássico ao degradê moderno com finalização premium.</p>
+                        <div class="flex items-center justify-between border-t border-zinc-800 pt-6">
+                            <span class="text-gold font-black text-2xl">R$ 55</span>
+                            <a href="https://wa.me/554896622872" class="text-xs font-bold uppercase tracking-widest hover:text-gold transition">Reservar</a>
+                        </div>
+                    </div>
+
+                    <div class="group bg-zinc-900/50 p-10 rounded-2xl border border-zinc-800 hover:border-gold transition-all duration-500 reveal" style="transition-delay: 200ms;">
+                        <i data-lucide="user" class="w-10 h-10 text-gold mb-8 group-hover:rotate-12 transition"></i>
+                        <h4 class="text-2xl font-oswald uppercase font-bold mb-4">Barboterapia</h4>
+                        <p class="text-zinc-500 text-sm mb-8">Toalha quente e óleos para um barbear impecável.</p>
+                        <div class="flex items-center justify-between border-t border-zinc-800 pt-6">
+                            <span class="text-gold font-black text-2xl">R$ 45</span>
+                            <a href="https://wa.me/554896622872" class="text-xs font-bold uppercase tracking-widest hover:text-gold transition">Reservar</a>
+                        </div>
+                    </div>
+
+                    <div class="group bg-zinc-900/50 p-10 rounded-2xl border border-zinc-800 hover:border-gold transition-all duration-500 reveal" style="transition-delay: 400ms;">
+                        <i data-lucide="flame" class="w-10 h-10 text-gold mb-8 group-hover:rotate-12 transition"></i>
+                        <h4 class="text-2xl font-oswald uppercase font-bold mb-4">Combo Don</h4>
+                        <p class="text-zinc-500 text-sm mb-8">Cabelo + Barba com aquele trato especial e desconto.</p>
+                        <div class="flex items-center justify-between border-t border-zinc-800 pt-6">
+                            <span class="text-gold font-black text-2xl">R$ 90</span>
+                            <a href="https://wa.me/554896622872" class="text-xs font-bold uppercase tracking-widest hover:text-gold transition">Reservar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="localizacao" class="py-24 px-6 bg-zinc-950">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h2 class="text-5xl font-oswald font-black uppercase mb-8">ONDE <span class="text-gold italic">ESTAMOS</span></h2>
+                    <div class="space-y-6">
+                        <div class="flex gap-4 p-6 bg-zinc-900 rounded-xl border-l-4 border-gold">
+                            <i data-lucide="map-pin" class="text-gold w-8 h-8 shrink-0"></i>
+                            <div>
+                                <h5 class="font-bold text-white uppercase text-sm mb-1">Nosso Endereço</h5>
+                                <p class="text-zinc-400 text-sm">Rua José Mathias Zimmermann, 133<br>Sertão do Maruim, São José - SC</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 p-6 bg-zinc-900 rounded-xl border-l-4 border-zinc-700">
+                            <i data-lucide="clock" class="text-gold w-8 h-8 shrink-0"></i>
+                            <div>
+                                <h5 class="font-bold text-white uppercase text-sm mb-1">Funcionamento</h5>
+                                <p class="text-zinc-400 text-sm italic">Terça a Sexta: 09h - 20h<br>Sábados: 08h - 18h</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://www.google.com/maps/dir//Barbearia+Don+Carlos,+R.+Jos%C3%A9+Mathias+Zimmermann,+133+-+Sert%C3%A3o+do+Maruim,+S%C3%A3o+Jos%C3%A9+-+SC,+88122-110/" target="_blank" class="mt-10 inline-flex items-center gap-3 bg-white text-black px-8 py-4 font-bold uppercase text-xs tracking-widest hover:bg-gold transition rounded-sm">
+                        <i data-lucide="navigation" class="w-4 h-4"></i> Iniciar Rota no GPS
+                    </a>
+                </div>
+
+                <div class="h-[400px] rounded-3xl overflow-hidden border-8 border-zinc-900 shadow-2xl reveal">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3534.6146608933454!2d-48.6738914!3d-27.6368484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d84be8e825c353%3A0xd0b8897a2c8da639!2sBarbearia%20Don%20Carlos!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr" 
+                        width="100%" height="100%" style="border:0; filter: grayscale(1) invert(0.9);" allowfullscreen="" loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-black py-16 px-8 border-t border-zinc-900">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+                <div class="text-center md:text-left">
+                    <h2 class="text-4xl font-oswald font-black italic tracking-tighter">DON <span class="text-gold">CARLOS</span></h2>
+                    <p class="text-zinc-600 text-xs uppercase tracking-[0.4em] mt-2 italic">Since 2026</p>
+                </div>
+                
+                <div class="flex gap-10">
+                    <div class="text-center">
+                        <h6 class="text-[10px] text-zinc-500 uppercase tracking-widest mb-4 font-bold italic">Siga-nos</h6>
+                        <div class="flex gap-4 justify-center">
+                            <a href="#" class="text-zinc-400 hover:text-gold transition"><i data-lucide="instagram"></i></a>
+                            <a href="#" class="text-zinc-400 hover:text-gold transition"><i data-lucide="facebook"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h6 class="text-[10px] text-zinc-500 uppercase tracking-widest mb-4 font-bold italic">Contato</h6>
+                        <p class="text-white font-bold text-sm">(48) 9662-2872</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="max-w-6xl mx-auto mt-16 pt-8 border-t border-zinc-900 text-center flex flex-col md:flex-row justify-between gap-4">
+                <p class="text-[9px] text-zinc-700 uppercase tracking-widest">© 2026 Don Carlos Barbearia.</p>
+                <p class="text-[9px] text-zinc-700 uppercase tracking-widest">Built by <span class="text-zinc-500">Madeira Labs</span></p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        }
+
+        window.onscroll = function() {
+            // Progress Bar
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+            
+            // Reveal on Scroll
+            const reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(reveal => {
+                let windowHeight = window.innerHeight;
+                let elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveal.classList.add("animate__animated", "animate__fadeInUp");
+                    reveal.style.opacity = "1";
+                }
+            });
+        };
+    </script>
+</body>
+</html>
