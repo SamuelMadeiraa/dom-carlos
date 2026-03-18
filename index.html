@@ -161,43 +161,52 @@
 
         <section id="servicos" class="py-24 px-6 bg-black">
             <div class="max-w-6xl mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                    <div>
-                        <h3 class="text-gold font-bold uppercase tracking-widest text-sm mb-4">Escolha seu estilo</h3>
-                        <h2 class="text-5xl font-oswald font-black uppercase">Serviços <span class="text-zinc-800 italic">Premium</span></h2>
-                    </div>
-                    <p class="text-zinc-500 max-w-sm italic">Especialistas em barboterapia e cortes modernos.</p>
+                <div class="text-center mb-16">
+                    <h3 class="text-gold font-bold uppercase tracking-widest text-sm mb-4">Tabela de Preços</h3>
+                    <h2 class="text-5xl font-oswald font-black uppercase">Nossos <span class="text-zinc-800 italic">Serviços</span></h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
-                    <div class="group bg-zinc-900/50 p-10 rounded-2xl border border-zinc-800 hover:border-gold transition-all duration-500 reveal">
-                        <i data-lucide="scissors" class="w-10 h-10 text-gold mb-8 group-hover:rotate-12 transition"></i>
-                        <h4 class="text-2xl font-oswald uppercase font-bold mb-4">Corte de Cabelo</h4>
-                        <p class="text-zinc-500 text-sm mb-8">Do clássico ao degradê moderno com finalização premium.</p>
-                        <div class="flex items-center justify-between border-t border-zinc-800 pt-6">
-                            <span class="text-gold font-black text-2xl">R$ 55</span>
-                            <a href="https://wa.me/554896622872" class="text-xs font-bold uppercase tracking-widest hover:text-gold transition">Reservar</a>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-zinc-900/40 p-8 rounded-2xl border border-zinc-800 reveal">
+                        <div class="flex items-center gap-3 mb-6 border-b border-zinc-800 pb-4">
+                            <i data-lucide="scissors" class="text-gold w-6 h-6"></i>
+                            <h4 class="font-oswald text-xl uppercase font-bold tracking-wider">Cortes</h4>
+                        </div>
+                        <ul class="space-y-4">
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Na Tesoura</span> <span class="text-gold font-bold">R$ 40,00</span></li>
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Na Máquina</span> <span class="text-gold font-bold">R$ 25,00</span></li>
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Social</span> <span class="text-gold font-bold">R$ 35,00</span></li>
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Degradê</span> <span class="text-gold font-bold">R$ 35,00</span></li>
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Navalhado</span> <span class="text-gold font-bold">R$ 40,00</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-zinc-900/40 p-8 rounded-2xl border border-zinc-800 reveal" style="transition-delay: 150ms;">
+                        <div class="flex items-center gap-3 mb-6 border-b border-zinc-800 pb-4">
+                            <i data-lucide="user" class="text-gold w-6 h-6"></i>
+                            <h4 class="font-oswald text-xl uppercase font-bold tracking-wider">Barba & Detalhes</h4>
+                        </div>
+                        <ul class="space-y-4">
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Tradicional</span> <span class="text-gold font-bold">R$ 30,00</span></li>
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">No Vapor de Ozônio</span> <span class="text-gold font-bold">R$ 35,00</span></li>
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Sobrancelha</span> <span class="text-gold font-bold">R$ 5,00</span></li>
+                        </ul>
+                        <div class="mt-8 p-4 bg-zinc-950 rounded-lg border border-zinc-800 italic text-[11px] text-zinc-500">
+                            Aviso: No cartão será cobrado a taxa de operação.
                         </div>
                     </div>
 
-                    <div class="group bg-zinc-900/50 p-10 rounded-2xl border border-zinc-800 hover:border-gold transition-all duration-500 reveal" style="transition-delay: 200ms;">
-                        <i data-lucide="user" class="w-10 h-10 text-gold mb-8 group-hover:rotate-12 transition"></i>
-                        <h4 class="text-2xl font-oswald uppercase font-bold mb-4">Barboterapia</h4>
-                        <p class="text-zinc-500 text-sm mb-8">Toalha quente e óleos para um barbear impecável.</p>
-                        <div class="flex items-center justify-between border-t border-zinc-800 pt-6">
-                            <span class="text-gold font-black text-2xl">R$ 45</span>
-                            <a href="https://wa.me/554896622872" class="text-xs font-bold uppercase tracking-widest hover:text-gold transition">Reservar</a>
+                    <div class="bg-zinc-900/40 p-8 rounded-2xl border-2 border-gold reveal" style="transition-delay: 300ms;">
+                        <div class="flex items-center gap-3 mb-6 border-b border-zinc-800 pb-4">
+                            <i data-lucide="sparkles" class="text-gold w-6 h-6"></i>
+                            <h4 class="font-oswald text-xl uppercase font-bold tracking-wider">Combos & Planos</h4>
                         </div>
-                    </div>
-
-                    <div class="group bg-zinc-900/50 p-10 rounded-2xl border border-zinc-800 hover:border-gold transition-all duration-500 reveal" style="transition-delay: 400ms;">
-                        <i data-lucide="flame" class="w-10 h-10 text-gold mb-8 group-hover:rotate-12 transition"></i>
-                        <h4 class="text-2xl font-oswald uppercase font-bold mb-4">Combo Don</h4>
-                        <p class="text-zinc-500 text-sm mb-8">Cabelo + Barba com aquele trato especial e desconto.</p>
-                        <div class="flex items-center justify-between border-t border-zinc-800 pt-6">
-                            <span class="text-gold font-black text-2xl">R$ 90</span>
-                            <a href="https://wa.me/554896622872" class="text-xs font-bold uppercase tracking-widest hover:text-gold transition">Reservar</a>
-                        </div>
+                        <ul class="space-y-4">
+                            <li class="flex justify-between items-center font-bold italic"><span class="text-white">Corte + Barba</span> <span class="text-gold">R$ 60,00</span></li>
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Pacotão Mensal Corte</span> <span class="text-gold font-bold">R$ 120,00</span></li>
+                            <li class="flex justify-between items-center"><span class="text-zinc-400">Pacotão da Casa</span> <span class="text-gold font-bold">R$ 200,00</span></li>
+                        </ul>
+                        <a href="https://wa.me/554896622872" class="mt-8 block w-full text-center bg-gold text-black font-bold py-3 rounded-lg uppercase text-xs tracking-widest hover:scale-105 transition">Agendar agora</a>
                     </div>
                 </div>
             </div>
@@ -223,14 +232,14 @@
                             </div>
                         </div>
                     </div>
-                    <a href="https://www.google.com/maps/dir//Barbearia+Don+Carlos,+R.+Jos%C3%A9+Mathias+Zimmermann,+133+-+Sert%C3%A3o+do+Maruim,+S%C3%A3o+Jos%C3%A9+-+SC,+88122-110/" target="_blank" class="mt-10 inline-flex items-center gap-3 bg-white text-black px-8 py-4 font-bold uppercase text-xs tracking-widest hover:bg-gold transition rounded-sm">
+                    <a href="https://www.google.com/maps/dir//Rua+Jos%C3%A9+Mathias+Zimmermann,+133+-+Sert%C3%A3o+do+Maruim,+S%C3%A3o+Jos%C3%A9+-+SC" target="_blank" class="mt-10 inline-flex items-center gap-3 bg-white text-black px-8 py-4 font-bold uppercase text-xs tracking-widest hover:bg-gold transition rounded-sm">
                         <i data-lucide="navigation" class="w-4 h-4"></i> Iniciar Rota no GPS
                     </a>
                 </div>
 
                 <div class="h-[400px] rounded-3xl overflow-hidden border-8 border-zinc-900 shadow-2xl reveal">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3534.6146608933454!2d-48.6738914!3d-27.6368484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d84be8e825c353%3A0xd0b8897a2c8da639!2sBarbearia%20Don%20Carlos!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3534.613348633783!2d-48.6750000!3d-27.6320000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9527364f3c000001%3A0x0!2zMjfCsDM3JzU1LjIiUyA0OMKwNDAnMzAuMCJX!5e0!3m2!1spt-BR!2sbr!4v1710000000000" 
                         width="100%" height="100%" style="border:0; filter: grayscale(1) invert(0.9);" allowfullscreen="" loading="lazy">
                     </iframe>
                 </div>
@@ -240,16 +249,16 @@
         <footer class="bg-black py-16 px-8 border-t border-zinc-900">
             <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
                 <div class="text-center md:text-left">
-                    <h2 class="text-4xl font-oswald font-black italic tracking-tighter">DON <span class="text-gold">CARLOS</span></h2>
-                    <p class="text-zinc-600 text-xs uppercase tracking-[0.4em] mt-2 italic">Since 2026</p>
+                    <h2 class="text-4xl font-oswald font-black italic tracking-tighter text-white">DON <span class="text-gold">CARLOS</span></h2>
+                    <p class="text-zinc-600 text-xs uppercase tracking-[0.4em] mt-2 italic">Professional Barber Shop</p>
                 </div>
                 
                 <div class="flex gap-10">
                     <div class="text-center">
                         <h6 class="text-[10px] text-zinc-500 uppercase tracking-widest mb-4 font-bold italic">Siga-nos</h6>
-                        <div class="flex gap-4 justify-center">
-                            <a href="#" class="text-zinc-400 hover:text-gold transition"><i data-lucide="instagram"></i></a>
-                            <a href="#" class="text-zinc-400 hover:text-gold transition"><i data-lucide="facebook"></i></a>
+                        <div class="flex gap-4 justify-center text-white">
+                            <a href="https://www.instagram.com/doncarlos.barbearia/" class="hover:text-gold transition"><i data-lucide="instagram"></i></a>
+                            <a href="" https://www.instagram.com/doncarlos.barbearia/class="hover:text-gold transition"><i data-lucide="facebook"></i></a>
                         </div>
                     </div>
                     <div class="text-center">
@@ -260,7 +269,7 @@
             </div>
             
             <div class="max-w-6xl mx-auto mt-16 pt-8 border-t border-zinc-900 text-center flex flex-col md:flex-row justify-between gap-4">
-                <p class="text-[9px] text-zinc-700 uppercase tracking-widest">© 2026 Don Carlos Barbearia.</p>
+                <p class="text-[9px] text-zinc-700 uppercase tracking-widest">© 2026 Don Carlos Barbearia. Todos os direitos reservados.</p>
                 <p class="text-[9px] text-zinc-700 uppercase tracking-widest">Built by <span class="text-zinc-500">Madeira Labs</span></p>
             </div>
         </footer>
@@ -274,13 +283,11 @@
         }
 
         window.onscroll = function() {
-            // Progress Bar
             let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             let scrolled = (winScroll / height) * 100;
             document.getElementById("progress-bar").style.width = scrolled + "%";
             
-            // Reveal on Scroll
             const reveals = document.querySelectorAll(".reveal");
             reveals.forEach(reveal => {
                 let windowHeight = window.innerHeight;
