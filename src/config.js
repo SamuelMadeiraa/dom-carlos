@@ -34,7 +34,7 @@ export const CONFIG = {
   toleranciaMin: 10,
 
   senhaAdmin: 'barber123',
-  mostrarSenhaNaTela: true, // false ao entregar para o cliente
+  mostrarSenhaNaTela: false, // o site está no ar: a dica de senha não pode aparecer
 
   chaveArmazenamento: 'doncarlos-pro-agendamentos-v1',
   intervaloMin: 30, // de quantos em quantos minutos abre horário
