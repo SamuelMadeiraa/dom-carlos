@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { BARBEIROS } from '../config.js'
+import { useCatalogo } from '../dados/catalogo.js'
 import Reveal from './ui/Reveal.jsx'
 import { Tesoura, Maquina, Navalha } from './ui/Ilustracoes.jsx'
 
@@ -7,6 +7,8 @@ import { Tesoura, Maquina, Navalha } from './ui/Ilustracoes.jsx'
 const FERRAMENTAS = [Tesoura, Maquina, Navalha]
 
 export default function Equipe() {
+  const { barbeiros } = useCatalogo()
+
   return (
     <section className="secao secao--alt" id="equipe">
       <div className="container">
@@ -19,9 +21,10 @@ export default function Equipe() {
         </Reveal>
 
         <div className="equipe">
-          {BARBEIROS.map((b, i) => {
+          {barbeiros.map((b, i) => {
             const Ferramenta = FERRAMENTAS[i % FERRAMENTAS.length]
-            const inicial = b.nome.trim().split(' ').pop()[0]
+            /* nome vazio no painel não pode derrubar a página */
+            const inicial = b.nome.trim().split(' ').pop()[0] || '·'
 
             return (
               <Reveal key={b.id} delay={i * 0.1}>

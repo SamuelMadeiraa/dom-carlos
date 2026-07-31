@@ -192,6 +192,116 @@
   font-size: 14.5px;
 }
 
+/* ------------------------------------------- editor de serviços e equipe */
+/* Duas colunas de fichas editáveis. Cada ficha é uma linha só de conteúdo,
+   com os campos curtos (preço, duração, ícone) lado a lado — quem edita
+   preço quer bater o olho e trocar o número, não caçar campo. */
+.editor {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 22px;
+  margin-top: 22px;
+}
+.editor__coluna {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.editor__titulo {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ouro);
+  margin-bottom: 2px;
+}
+.editor__item {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio-p);
+  padding: 14px;
+}
+.editor__icone {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: 12px;
+  color: var(--ouro);
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 750;
+}
+.editor__campos {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.editor__campos input,
+.editor__campos select,
+.editor__campos textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--traco);
+  border-radius: 9px;
+  color: var(--texto);
+  padding: 9px 11px;
+  font-size: 13.5px;
+  resize: vertical;
+}
+.editor__campos input:focus,
+.editor__campos select:focus,
+.editor__campos textarea:focus {
+  outline: none;
+  border-color: var(--ouro);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+}
+.editor__nome {
+  font-weight: 650;
+  color: var(--branco) !important;
+}
+.editor__linha {
+  display: flex;
+  gap: 8px;
+}
+.editor__mini {
+  flex: 1;
+  min-width: 0;
+}
+.editor__mini > span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-mudo);
+  margin-bottom: 4px;
+}
+.editor__marca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--texto-mudo);
+  cursor: pointer;
+}
+.editor__marca input {
+  width: auto !important;
+  accent-color: var(--ouro);
+}
+@media (max-width: 900px) {
+  .editor {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* -------------------------------------------------------------- gráficos */
 .barras {
   display: flex;

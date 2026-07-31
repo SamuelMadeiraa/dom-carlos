@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { CONFIG, SERVICOS, BARBEIROS, gruposExpediente, servicoPor, barbeiroPor, nomeMarca } from '../config.js'
+import { CONFIG, gruposExpediente, nomeMarca } from '../config.js'
+import { useCatalogo, servicoPor, barbeiroPor } from '../dados/catalogo.js'
 import { agendar, horariosDoDia, hojeISO, linkWhatsapp, dinheiro } from '../dados/store.js'
 import Reveal from './ui/Reveal.jsx'
 import { Poste, Pente, Navalha, Coroa, Tesoura } from './ui/Ilustracoes.jsx'
@@ -8,6 +9,7 @@ import { Poste, Pente, Navalha, Coroa, Tesoura } from './ui/Ilustracoes.jsx'
 const VAZIO = { nome: '', tel: '', serv: '', barb: '', data: '', hora: '', obs: '' }
 
 export default function Agendamento({ servicoPreSelecionado }) {
+  const { servicos, barbeiros } = useCatalogo()
   const [form, setForm] = useState(VAZIO)
   const [erro, setErro] = useState('')
   const [feito, setFeito] = useState(null)
@@ -153,7 +155,7 @@ export default function Agendamento({ servicoPreSelecionado }) {
                   <span>Profissional</span>
                   <select value={form.barb} onChange={campo('barb')}>
                     <option value="">Qualquer um disponível</option>
-                    {BARBEIROS.map((b) => (
+                    {barbeiros.map((b) => (
                       <option key={b.id} value={b.id}>
                         {b.nome} — {b.esp}
                       </option>
@@ -166,7 +168,7 @@ export default function Agendamento({ servicoPreSelecionado }) {
                 <span>Serviço *</span>
                 <select value={form.serv} onChange={campo('serv')}>
                   <option value="">Selecione um serviço</option>
-                  {SERVICOS.map((s) => (
+                  {servicos.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.nome} — R${s.preco},00 ({s.dur}min)
                     </option>
@@ -234,7 +236,7 @@ export default function Agendamento({ servicoPreSelecionado }) {
                   <div className="resumo__texto">
                     {servico
                       ? `${servico.nome} · ${servico.dur}min${
-                          form.barb ? ` · ${barbeiroPor(form.barb).nome}` : ''
+                          barbeiroPor(form.barb) ? ` · ${barbeiroPor(form.barb).nome}` : ''
                         }${form.hora ? ` · ${form.hora}` : ''}`
                       : 'Selecione um serviço'}
                   </div>

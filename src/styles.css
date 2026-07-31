@@ -134,6 +134,14 @@ textarea {
   transform: translateY(-2px);
   box-shadow: 0 16px 38px -14px rgba(201, 162, 39, 0.85);
 }
+/* "Tudo salvo" no painel: continua legível, mas sem parecer clicável */
+.btn:disabled,
+.btn:disabled:hover {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
 .btn--vazio {
   background: var(--superficie);
   color: var(--texto);

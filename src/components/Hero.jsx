@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from 'framer-motion'
-import { CONFIG, SERVICOS, BARBEIROS, gruposExpediente, nomeMarca } from '../config.js'
+import { CONFIG, gruposExpediente, nomeMarca } from '../config.js'
+import { useCatalogo } from '../dados/catalogo.js'
 import { FiosCaindo, Tesoura, Maquina, Navalha } from './ui/Ilustracoes.jsx'
 
 const easeOut = [0.16, 1, 0.3, 1]
@@ -16,6 +17,7 @@ const subir = {
 
 export default function Hero() {
   const area = useRef(null)
+  const { servicos, barbeiros } = useCatalogo()
 
   /* brilho seguindo o mouse: a mola evita o efeito "colado" no cursor */
   const mx = useMotionValue(-400)
@@ -37,8 +39,8 @@ export default function Hero() {
   const abertos = gruposExpediente().filter((g) => g.aberto)
 
   const numeros = [
-    { valor: SERVICOS.length, rotulo: 'serviços no cardápio' },
-    { valor: BARBEIROS.length, rotulo: 'profissionais' },
+    { valor: servicos.length, rotulo: 'serviços no cardápio' },
+    { valor: barbeiros.length, rotulo: 'profissionais' },
     CONFIG.cidade
       ? { valor: CONFIG.cidade, rotulo: 'atendimento' }
       : { valor: '24h', rotulo: 'agenda aberta' },
@@ -141,7 +143,7 @@ export default function Hero() {
           <div className="cartao-precos__titulo">Tabela de preços</div>
 
           <ul className="cartao-precos__lista">
-            {SERVICOS.map((s, i) => (
+            {servicos.map((s, i) => (
               <motion.li
                 key={s.id}
                 initial={{ opacity: 0, x: 14 }}

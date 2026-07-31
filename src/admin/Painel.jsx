@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { CONFIG, BARBEIROS, STATUS, nomeMarca } from '../config.js'
+import { CONFIG, STATUS, nomeMarca } from '../config.js'
 import { Link } from '../router.jsx'
+import { useCatalogo } from '../dados/catalogo.js'
 import {
   listar, aoMudar, resumo, receitaPorServico, receitaPorBarbeiro, agendaDeHoje,
   mudarStatus, excluir, limparTudo, exportarCsv, gerarExemplos, dinheiro, hojeISO, linkWhatsapp,
 } from '../dados/store.js'
 import { Barras, Rosca, Ranking } from './graficos.jsx'
+import Catalogo from './Catalogo.jsx'
 import { Poste } from '../components/ui/Ilustracoes.jsx'
 
 const easeOut = [0.16, 1, 0.3, 1]
@@ -14,6 +16,9 @@ const easeOut = [0.16, 1, 0.3, 1]
 export default function Painel({ aoSair }) {
   /* um contador simples é o bastante pra reprocessar tudo quando os dados mudam */
   const [versao, setVersao] = useState(0)
+  /* o catálogo entra aqui porque os gráficos são por serviço e por
+     profissional: mudou o cardápio, os números têm que ser refeitos */
+  const catalogo = useCatalogo()
   const [busca, setBusca] = useState('')
   const [filtroBarb, setFiltroBarb] = useState('')
   const [filtroStatus, setFiltroStatus] = useState('')
@@ -35,7 +40,7 @@ export default function Painel({ aoSair }) {
       hoje: agendaDeHoje(),
       todos: listar(),
     }),
-    [versao]
+    [versao, catalogo]
   )
 
   const filtrados = useMemo(() => {
@@ -186,6 +191,8 @@ export default function Painel({ aoSair }) {
           </section>
         </div>
 
+        <Catalogo aoAvisar={setRecado} />
+
         <section className="quadro">
           <div className="quadro__cabeca">
             <div>
@@ -202,7 +209,7 @@ export default function Painel({ aoSair }) {
               />
               <select value={filtroBarb} onChange={(e) => setFiltroBarb(e.target.value)}>
                 <option value="">Todos os profissionais</option>
-                {BARBEIROS.map((b) => (
+                {catalogo.barbeiros.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.nome}
                   </option>

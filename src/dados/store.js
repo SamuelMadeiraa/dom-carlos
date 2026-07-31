@@ -6,7 +6,8 @@
  * agenda compartilhada entre aparelhos, é este arquivo que troca de
  * implementação — nenhum componente fala com o localStorage direto.
  */
-import { CONFIG, STATUS, servicoPor, barbeiroPor, SERVICOS, BARBEIROS } from '../config.js'
+import { CONFIG, STATUS } from '../config.js'
+import { servicos, barbeiros, servicoPor, barbeiroPor } from './catalogo.js'
 
 const CHAVE = CONFIG.chaveArmazenamento
 
@@ -77,7 +78,7 @@ export function agendar({ nome, tel, serv, barb, data, hora, obs }) {
 
   let escolhido = barb
   if (!escolhido) {
-    const livre = BARBEIROS.find((b) => !ocupados(data, b.id).includes(hora))
+    const livre = barbeiros().find((b) => !ocupados(data, b.id).includes(hora))
     if (!livre)
       return { ok: false, erro: 'Todos os profissionais já estão ocupados nesse horário.' }
     escolhido = livre.id
@@ -152,7 +153,7 @@ export function resumo() {
 
 export function receitaPorServico() {
   const at = ativos(listar())
-  return SERVICOS.map((s) => ({
+  return servicos().map((s) => ({
     id: s.id,
     nome: s.nome,
     total: at.filter((a) => a.serv === s.id).reduce((x, a) => x + a.preco, 0),
@@ -162,7 +163,7 @@ export function receitaPorServico() {
 
 export function receitaPorBarbeiro() {
   const at = ativos(listar())
-  return BARBEIROS.map((b) => ({
+  return barbeiros().map((b) => ({
     id: b.id,
     nome: b.nome,
     total: at.filter((a) => a.barb === b.id).reduce((x, a) => x + a.preco, 0),
@@ -211,10 +212,12 @@ export function gerarExemplos() {
   ]
   const lista = listar()
   const base = new Date()
+  const cardapio = servicos()
+  const equipe = barbeiros()
 
   nomes.forEach((nome, i) => {
-    const s = SERVICOS[Math.floor(Math.random() * SERVICOS.length)]
-    const b = BARBEIROS[Math.floor(Math.random() * BARBEIROS.length)]
+    const s = cardapio[Math.floor(Math.random() * cardapio.length)]
+    const b = equipe[Math.floor(Math.random() * equipe.length)]
 
     const d = new Date(base)
     d.setDate(base.getDate() + (i % 7) - 2)

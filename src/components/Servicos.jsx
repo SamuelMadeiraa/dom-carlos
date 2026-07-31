@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion'
-import { SERVICOS } from '../config.js'
+import { useCatalogo } from '../dados/catalogo.js'
 import Reveal from './ui/Reveal.jsx'
 import { Ilustracao, LinhaCorte } from './ui/Ilustracoes.jsx'
 
 export default function Servicos({ aoEscolher }) {
+  const { servicos } = useCatalogo()
+
   return (
     <section className="secao" id="servicos">
       <div className="container">
@@ -20,7 +22,7 @@ export default function Servicos({ aoEscolher }) {
         {/* o span do bento fica no filho direto da grade — quem ocupa a célula
             é o Reveal, não o cartão */}
         <div className="servicos">
-          {SERVICOS.map((s, i) => (
+          {servicos.map((s, i) => (
             <Reveal key={s.id} delay={i * 0.07} className={s.destaque ? 'servicos__larga' : ''}>
               <motion.article
                 className={`servico ${s.destaque ? 'servico--destaque' : ''}`}

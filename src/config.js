@@ -43,7 +43,14 @@ export const CONFIG = {
   expediente: { 0: null, 1: [9, 20], 2: [9, 20], 3: [9, 20], 4: [9, 20], 5: [9, 20], 6: [9, 17] },
 }
 
-export const SERVICOS = [
+/**
+ * Cardápio e equipe de fábrica.
+ *
+ * A partir daqui isto é só o ponto de partida: o painel deixa o dono editar
+ * nome, preço e duração, e o que ele salvar passa a valer. Quem lê essas
+ * listas em tempo de execução é `src/dados/catalogo.js`, nunca este arquivo.
+ */
+export const SERVICOS_PADRAO = [
   {
     id: 'corte',
     nome: 'Corte Masculino',
@@ -95,7 +102,7 @@ export const SERVICOS = [
   },
 ]
 
-export const BARBEIROS = [
+export const BARBEIROS_PADRAO = [
   {
     id: 'carlos',
     nome: 'Don Carlos',
@@ -160,8 +167,6 @@ export function gruposExpediente() {
 }
 
 export const nomeMarca = () => `${CONFIG.marca.parte1} ${CONFIG.marca.parte2}`
-export const servicoPor = (id) => SERVICOS.find((s) => s.id === id)
-export const barbeiroPor = (id) => BARBEIROS.find((b) => b.id === id)
 
 /* --------------------------------------------------------------- mapa */
 /* O endereço só vira mapa se estiver preenchido — sem chave de API: o Google
