@@ -1,0 +1,1258 @@
+/* =========================================================================
+   Don Carlos Barbearia — layout moderno.
+
+   Direção: tipografia display enorme e bem apertada, superfícies de vidro
+   sobre preto, cantos arredondados e brilho que segue o mouse. A paleta é a
+   da marca — preto #0D0D0F, ouro #C9A227 e osso #F4EFE4 —, mas a linguagem
+   aqui é de produto digital, não de letreiro de barbearia clássica.
+
+   Regra de uso do ouro: ele é o destaque, nunca o corpo do texto. Título,
+   preço, ícone, botão principal e borda de cartão em destaque; leitura longa
+   fica no osso.
+   ========================================================================= */
+
+:root {
+  --bg: #0d0d0f;
+  --bg-2: #131316;
+  /* as superfícies são tingidas de ouro, não de branco: é o que dá o ar
+     quente de barbearia sem precisar de imagem de fundo */
+  --superficie: rgba(201, 162, 39, 0.055);
+  --superficie-2: rgba(201, 162, 39, 0.1);
+  --traco: rgba(201, 162, 39, 0.17);
+  --traco-forte: rgba(201, 162, 39, 0.48);
+
+  --ouro: #c9a227;
+  --ouro-claro: #e3c25c;
+  --ouro-brilho: #fff3cf;
+  --ouro-escuro: #8a6d15;
+  /* o metal da marca: escuro nas pontas, luz no meio */
+  --metal: linear-gradient(
+    100deg,
+    #8a6d15 0%,
+    #c9a227 22%,
+    #f0d98a 40%,
+    #fff3cf 50%,
+    #e3c25c 62%,
+    #b08d1c 82%,
+    #8a6d15 100%
+  );
+
+  --branco: #f4efe4; /* osso — o "claro" da marca, nunca branco puro */
+  --texto: #e8e2d6;
+  --texto-mudo: #8e867a;
+  --sombra: 0 30px 80px -30px rgba(0, 0, 0, 0.95);
+
+  --display: 'Segoe UI Variable Display', 'Segoe UI', Inter, system-ui, -apple-system, sans-serif;
+  --sans: 'Segoe UI', Inter, system-ui, -apple-system, sans-serif;
+
+  --raio: 22px;
+  --raio-p: 13px;
+  --altura-nav: 78px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--texto);
+  line-height: 1.55;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* granulado de fundo: tira o "chapado" do preto puro sem pesar */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: radial-gradient(circle at 1px 1px, var(--ouro) 1px, transparent 0);
+  background-size: 3px 3px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.carregando {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: var(--texto-mudo);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+/* --------------------------------------------------------------- botões */
+/* o botão principal é uma placa de ouro escovado sobre preto */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: var(--metal);
+  color: #0d0d0f;
+  border: 1px solid var(--ouro-claro);
+  border-radius: 100px;
+  padding: 13px 24px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 10px 30px -14px rgba(201, 162, 39, 0.7);
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s, color 0.2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px -14px rgba(201, 162, 39, 0.85);
+}
+.btn--vazio {
+  background: var(--superficie);
+  color: var(--texto);
+  border-color: var(--traco);
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+}
+.btn--vazio:hover {
+  background: var(--superficie-2);
+  border-color: var(--traco-forte);
+  color: var(--ouro-claro);
+  box-shadow: none;
+}
+.btn--fantasma {
+  background: transparent;
+  border-color: transparent;
+  color: var(--texto-mudo);
+  box-shadow: none;
+}
+.btn--fantasma:hover {
+  color: var(--ouro-claro);
+  box-shadow: none;
+}
+.btn--grande {
+  padding: 16px 30px;
+  font-size: 15px;
+}
+.btn--pequeno {
+  padding: 9px 16px;
+  font-size: 12.5px;
+}
+.btn--largo {
+  width: 100%;
+}
+
+/* ---------------------------------------------------------------- marca */
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.marca__poste {
+  flex: none;
+  opacity: 0.9;
+}
+.marca svg {
+  color: var(--ouro);
+}
+/* o selo do cliente. Em tamanho pequeno ele não se lê sozinho — por isso o
+   nome continua escrito ao lado, e o selo faz o papel de brasão. */
+.marca__logo {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(201, 162, 39, 0.35));
+}
+.marca--rodape .marca__logo {
+  width: 72px;
+  height: 72px;
+}
+.marca__l1 {
+  display: block;
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--branco);
+  line-height: 1.15;
+}
+/* o sobrenome é a parte dourada do letreiro, como no logo */
+.marca__l1 em {
+  font-style: normal;
+  background: var(--metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.marca__l2 {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ouro-escuro);
+  margin-top: 3px;
+}
+
+/* ------------------------------------------------------------------ nav */
+.nav {
+  position: fixed;
+  top: 14px;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  transition: top 0.3s;
+}
+.nav__in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  height: 64px;
+  padding: 0 12px 0 20px;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  transition: background 0.35s, border-color 0.35s, box-shadow 0.35s, backdrop-filter 0.35s;
+}
+/* a "pílula" só ganha vidro depois que a pessoa rola */
+.nav--solida .nav__in {
+  background: rgba(13, 13, 15, 0.78);
+  backdrop-filter: blur(18px) saturate(140%);
+  border-color: var(--traco);
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav__links a:not(.btn) {
+  color: var(--texto-mudo);
+  font-size: 14px;
+  font-weight: 550;
+  padding: 9px 14px;
+  border-radius: 100px;
+  white-space: nowrap;
+  transition: color 0.2s, background 0.2s;
+}
+.nav__links .btn {
+  white-space: nowrap;
+}
+.nav__links a:not(.btn):hover {
+  color: var(--ouro-claro);
+  background: var(--superficie);
+}
+
+/* ----------------------------------------------------------------- hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: calc(var(--altura-nav) + 76px) 0 92px;
+  isolation: isolate;
+}
+/* halo grande atrás do conteúdo */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: 1100px;
+  height: 900px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(201, 162, 39, 0.2), transparent 62%);
+  z-index: -2;
+  pointer-events: none;
+}
+/* brilho que acompanha o mouse — dá profundidade sem imagem nenhuma */
+.hero__brilho {
+  position: absolute;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.14), transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+/* fios de cabelo caindo no fundo do hero (ver FiosCaindo em Ilustracoes) */
+.fios {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  /* bem apagados: é fundo, não desenho — o ouro cheio competiria com o título */
+  color: rgba(201, 162, 39, 0.42);
+}
+.fio {
+  position: absolute;
+  top: 0;
+}
+.hero__grade {
+  display: grid;
+  grid-template-columns: 1.06fr 0.94fr;
+  gap: 54px;
+  align-items: center;
+}
+
+.pilula {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: 100px;
+  padding: 8px 16px 8px 12px;
+  font-size: 13px;
+  color: var(--texto-mudo);
+  backdrop-filter: blur(10px);
+  margin-bottom: 26px;
+}
+.pilula b {
+  color: var(--branco);
+  font-weight: 600;
+}
+.pilula__ponto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ouro-claro);
+  box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.18);
+}
+
+.hero__titulo {
+  font-family: var(--display);
+  font-size: clamp(44px, 6.6vw, 82px);
+  line-height: 0.98;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  color: var(--branco);
+}
+.hero__linha {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+.hero__linha > span {
+  display: block;
+}
+/* o realce é a palavra em ouro escovado — mesmo efeito do letreiro do logo */
+.hero__realce {
+  background: var(--metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__sub {
+  color: #a49c8e;
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 520px;
+  margin: 26px 0 34px;
+}
+.hero__acoes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.hero__numeros {
+  display: flex;
+  gap: 14px;
+  margin-top: 44px;
+  flex-wrap: wrap;
+}
+.hero__numeros > div {
+  flex: 1;
+  min-width: 128px;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio-p);
+  padding: 16px 18px;
+  backdrop-filter: blur(10px);
+}
+.hero__numeros b {
+  display: block;
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  color: var(--ouro-claro);
+  line-height: 1.1;
+}
+.hero__numeros span {
+  display: block;
+  font-size: 12.5px;
+  color: var(--texto-mudo);
+  margin-top: 2px;
+}
+
+/* -------------------------------------------------- cartão de preços */
+.cartao-precos {
+  position: relative;
+  background: linear-gradient(165deg, rgba(201, 162, 39, 0.11), rgba(201, 162, 39, 0.015));
+  border: 1px solid var(--traco);
+  border-radius: var(--raio);
+  padding: 26px;
+  box-shadow: var(--sombra);
+  backdrop-filter: blur(18px);
+}
+/* moldura dourada interna: a assinatura da marca nas peças impressas */
+.cartao-precos::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-radius: calc(var(--raio) - 7px);
+  pointer-events: none;
+}
+.cartao-precos__selo {
+  position: absolute;
+  top: -46px;
+  right: -30px;
+  width: 132px;
+  height: 132px;
+  object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.75));
+  pointer-events: none;
+}
+.cartao-precos__ferramentas {
+  display: flex;
+  gap: 12px;
+  color: var(--ouro);
+  margin-bottom: 18px;
+}
+.cartao-precos__ferramentas > * {
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: 12px;
+  padding: 8px;
+}
+.cartao-precos__titulo {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ouro);
+  margin-bottom: 14px;
+}
+.cartao-precos__lista {
+  list-style: none;
+}
+.cartao-precos__lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.12);
+}
+.cartao-precos__lista li:last-child {
+  border-bottom: none;
+}
+.cartao-precos__lista .n {
+  font-size: 15px;
+  font-weight: 550;
+  color: var(--texto);
+}
+.cartao-precos__lista .d {
+  font-size: 12.5px;
+  color: #6d6558;
+}
+.cartao-precos__lista .p {
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ouro-claro);
+  white-space: nowrap;
+}
+.cartao-precos__horas {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+.cartao-precos__horas div {
+  flex: 1;
+  min-width: 118px;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio-p);
+  padding: 12px 14px;
+}
+.cartao-precos__horas b {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ouro);
+}
+.cartao-precos__horas span {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--branco);
+}
+
+/* -------------------------------------------------------------- letreiro */
+/* faixa infinita: dá ritmo entre o hero e o conteúdo */
+.letreiro {
+  border-top: 1px solid var(--traco);
+  border-bottom: 1px solid var(--traco);
+  background: var(--bg-2);
+  overflow: hidden;
+  padding: 18px 0;
+  position: relative;
+  z-index: 1;
+}
+.letreiro__trilho {
+  display: flex;
+  width: max-content;
+  gap: 42px;
+  align-items: center;
+}
+.letreiro__item {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.letreiro__par {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #554e3e;
+}
+/* a ferramenta fica dourada: quebra a monotonia da faixa apagada */
+.letreiro__par svg {
+  color: var(--ouro);
+  opacity: 0.95;
+}
+
+/* --------------------------------------------------------------- faixa */
+.faixa {
+  padding: 26px 0;
+  position: relative;
+  z-index: 1;
+}
+.faixa__in {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.faixa__item {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio-p);
+  padding: 18px 20px;
+  color: var(--branco);
+}
+.faixa__item svg {
+  color: var(--ouro);
+}
+.faixa__item b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.faixa__item span {
+  font-size: 13.5px;
+  color: var(--texto-mudo);
+}
+
+/* -------------------------------------------------------------- seções */
+.secao {
+  padding: 96px 0;
+  position: relative;
+  z-index: 1;
+}
+.secao--alt {
+  background: linear-gradient(180deg, var(--bg-2), transparent);
+}
+.secao__cabeca {
+  max-width: 660px;
+  margin: 0 auto 52px;
+  text-align: center;
+}
+.chapeu {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ouro);
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: 100px;
+  padding: 6px 15px;
+}
+.secao__cabeca h2 {
+  font-family: var(--display);
+  font-size: clamp(32px, 4.4vw, 52px);
+  line-height: 1.03;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin: 18px 0 14px;
+  color: var(--branco);
+}
+.secao__cabeca h2 em {
+  font-style: normal;
+  background: var(--metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.secao__cabeca p {
+  color: var(--texto-mudo);
+  font-size: 16.5px;
+}
+
+/* divisor com a tesoura cortando */
+.linha-corte {
+  position: relative;
+  height: 34px;
+  margin: 0 auto 44px;
+  max-width: 820px;
+}
+.linha-corte__risco {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--traco) 0 7px, transparent 7px 15px);
+}
+.linha-corte__tesoura {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--ouro);
+  background: var(--bg);
+  padding: 0 8px;
+}
+.secao--alt .linha-corte__tesoura {
+  background: var(--bg-2);
+}
+
+/* ------------------------------------------------------------ serviços */
+/* bento: o serviço em destaque ocupa duas colunas e ganha respiro */
+.servicos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.servicos > * {
+  min-width: 0;
+}
+.servicos__larga {
+  grid-column: span 2;
+}
+.servico {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio);
+  padding: 28px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.servico:hover {
+  border-color: var(--traco-forte);
+  background: var(--superficie-2);
+}
+.servico--destaque {
+  background: linear-gradient(140deg, rgba(201, 162, 39, 0.18), rgba(201, 162, 39, 0.02));
+  border-color: var(--traco-forte);
+}
+.servico--destaque .servico__preco {
+  font-size: 52px;
+}
+.servico__selo {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  background: var(--metal);
+  color: #0d0d0f;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-radius: 100px;
+  padding: 5px 13px;
+}
+.servico__icone {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: 16px;
+  color: var(--ouro);
+  margin-bottom: 20px;
+}
+.servico h3 {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+  color: var(--branco);
+}
+.servico p {
+  color: var(--texto-mudo);
+  font-size: 14.5px;
+  flex: 1;
+}
+.servico__dur {
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: 16px;
+  font-size: 12.5px;
+  color: var(--texto-mudo);
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: 100px;
+  padding: 5px 13px;
+}
+.servico__preco {
+  font-family: var(--display);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  background: var(--metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 14px 0 18px;
+  line-height: 1;
+}
+.servico__preco small {
+  font-size: 16px;
+  color: var(--texto-mudo);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* --------------------------------------------------------------- equipe */
+.equipe {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+.profissional {
+  height: 100%;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio);
+  padding: 30px 28px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.profissional:hover {
+  border-color: var(--traco-forte);
+  background: var(--superficie-2);
+}
+.profissional__avatar {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 20px;
+  display: grid;
+  place-items: center;
+}
+.profissional__avatar span {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  color: var(--ouro-claro);
+}
+.profissional__anel {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(201, 162, 39, 0.55);
+}
+.profissional h4 {
+  font-family: var(--display);
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--branco);
+}
+.profissional__esp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ouro);
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: 100px;
+  padding: 5px 13px 5px 9px;
+  margin: 10px 0 12px;
+}
+.profissional p {
+  color: var(--texto-mudo);
+  font-size: 14px;
+}
+
+/* ---------------------------------------------------------- agendamento */
+.agendar {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 20px;
+  align-items: start;
+}
+.agendar__info {
+  position: sticky;
+  top: 100px;
+  background: linear-gradient(160deg, rgba(201, 162, 39, 0.13), rgba(201, 162, 39, 0.02));
+  border: 1px solid var(--traco);
+  border-radius: var(--raio);
+  padding: 30px;
+  backdrop-filter: blur(14px);
+}
+.agendar__info h3 {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  color: var(--branco);
+}
+.regua {
+  width: 96px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--metal);
+  transform-origin: left center;
+}
+.regua--clara {
+  width: 56px;
+  height: 2px;
+  margin: 14px 0 22px;
+  opacity: 0.6;
+}
+.info {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin: 16px 0;
+}
+.info__icone {
+  width: 42px;
+  height: 42px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: 12px;
+  color: var(--ouro);
+}
+.info b {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ouro);
+  margin-bottom: 3px;
+}
+.info span {
+  display: block;
+  color: var(--texto);
+  font-size: 14.5px;
+}
+
+.formulario {
+  background: var(--superficie);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio);
+  padding: 30px;
+  box-shadow: var(--sombra);
+}
+.campo {
+  display: block;
+  margin-bottom: 18px;
+}
+.campo > span {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-mudo);
+  margin-bottom: 9px;
+}
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio-p);
+  color: var(--texto);
+  padding: 14px 15px;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  outline: none;
+  border-color: var(--ouro);
+  box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.15);
+}
+.campo small {
+  display: block;
+  font-size: 12.5px;
+  color: #6d6558;
+  margin-top: 7px;
+}
+.campo__dupla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.horarios__vazio {
+  font-size: 14px;
+  color: var(--texto-mudo);
+  padding: 4px 0;
+}
+.horario {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--traco);
+  color: var(--texto);
+  border-radius: 100px;
+  padding: 10px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.18s;
+}
+.horario:hover:not(:disabled) {
+  border-color: var(--traco-forte);
+  transform: translateY(-1px);
+}
+.horario--ativo {
+  background: var(--metal);
+  border-color: var(--ouro-claro);
+  color: #0d0d0f;
+}
+.horario:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.resumo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid var(--traco);
+  border-radius: var(--raio-p);
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+.resumo__rotulo {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ouro);
+}
+.resumo__texto {
+  font-size: 15px;
+  font-weight: 550;
+  margin-top: 2px;
+}
+.resumo__valor {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--ouro-claro);
+  white-space: nowrap;
+}
+
+.aviso {
+  padding: 16px;
+  border-radius: var(--raio-p);
+  font-size: 14.5px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+.aviso--ok {
+  background: rgba(201, 162, 39, 0.12);
+  border: 1px solid var(--traco-forte);
+  color: var(--branco);
+}
+.aviso--ok .btn {
+  margin-top: 14px;
+}
+.aviso--erro {
+  background: rgba(201, 162, 39, 0.05);
+  border: 1px solid var(--traco);
+  border-left: 3px solid var(--ouro);
+  color: var(--texto);
+}
+
+/* ----------------------------------------------------------------- mapa */
+/* Fecha a página: endereço à esquerda, Google Maps à direita. O iframe é
+   carregado com `loading="lazy"` — só pesa se a pessoa chegar até aqui. */
+.mapa {
+  padding: 84px 0 92px;
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent, var(--bg-2));
+}
+.mapa__grade {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 22px;
+  align-items: stretch;
+}
+.mapa__lado {
+  background: linear-gradient(160deg, rgba(201, 162, 39, 0.13), rgba(201, 162, 39, 0.02));
+  border: 1px solid var(--traco);
+  border-radius: var(--raio);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+}
+.mapa__lado h2 {
+  font-family: var(--display);
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--branco);
+  margin: 16px 0 0;
+}
+.mapa__lado h2 em {
+  font-style: normal;
+  background: var(--metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.mapa__endereco {
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--texto);
+  margin: 22px 0 6px;
+}
+.mapa__endereco strong {
+  display: block;
+  color: var(--branco);
+  font-weight: 600;
+}
+.mapa__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 26px;
+}
+.mapa__quadro {
+  position: relative;
+  overflow: hidden;
+  min-height: 380px;
+  border: 1px solid var(--traco);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+.mapa__quadro iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  border: 0;
+  /* o mapa do Google é claro demais para a página: escurece e puxa pro ouro */
+  filter: invert(0.9) hue-rotate(175deg) saturate(0.55) brightness(0.95) contrast(0.95);
+}
+/* véu dourado por cima, sem bloquear o arrastar do mapa */
+.mapa__quadro::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgba(201, 162, 39, 0.12), transparent 55%);
+  box-shadow: inset 0 0 0 1px rgba(201, 162, 39, 0.2);
+  border-radius: var(--raio);
+}
+
+/* --------------------------------------------------------------- rodapé */
+.rodape {
+  border-top: 1px solid var(--traco);
+  background: var(--bg-2);
+  padding: 56px 0 28px;
+  position: relative;
+  z-index: 1;
+}
+.rodape__grade {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 34px;
+  margin-bottom: 34px;
+}
+.marca--rodape {
+  margin-bottom: 16px;
+}
+.rodape h4 {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ouro);
+  margin-bottom: 16px;
+}
+.rodape p,
+.rodape a:not(.rodape__admin) {
+  display: block;
+  color: var(--texto-mudo);
+  font-size: 14.5px;
+  margin-bottom: 9px;
+  transition: color 0.2s;
+}
+.rodape a:not(.rodape__admin):hover {
+  color: var(--ouro-claro);
+}
+.rodape__fim {
+  border-top: 1px solid var(--traco);
+  padding-top: 22px;
+  text-align: center;
+  color: #5f584c;
+  font-size: 13px;
+}
+.rodape__admin {
+  color: #3b352c;
+  transition: color 0.2s;
+}
+.rodape__admin:hover {
+  color: var(--ouro);
+}
+
+/* ----------------------------------------------------------- responsivo */
+@media (max-width: 980px) {
+  .servicos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .agendar {
+    grid-template-columns: 1fr;
+  }
+  .agendar__info {
+    position: static;
+  }
+  .mapa__grade {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero__grade,
+  .rodape__grade,
+  .servicos {
+    grid-template-columns: 1fr;
+  }
+  .servicos__larga {
+    grid-column: span 1;
+  }
+  .servico--destaque .servico__preco {
+    font-size: 42px;
+  }
+  .faixa__in {
+    grid-template-columns: 1fr;
+  }
+  .nav__links a:not(.btn) {
+    display: none;
+  }
+  .campo__dupla {
+    grid-template-columns: 1fr;
+  }
+  .secao {
+    padding: 68px 0;
+  }
+  .mapa {
+    padding: 56px 0 64px;
+  }
+  .mapa__lado {
+    padding: 26px;
+  }
+  .mapa__quadro,
+  .mapa__quadro iframe {
+    min-height: 300px;
+  }
+  .hero {
+    padding-top: calc(var(--altura-nav) + 44px);
+  }
+  .hero__numeros > div {
+    min-width: 104px;
+    padding: 13px 14px;
+  }
+  .cartao-precos__selo {
+    width: 96px;
+    height: 96px;
+    top: -34px;
+    right: -12px;
+  }
+  .marca__logo {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 560px) {
+  /* na pílula estreita do topo a linha de apoio quebraria em duas — o selo
+     e o nome já identificam a casa */
+  .nav .marca__l2 {
+    display: none;
+  }
+  .mapa__acoes .btn {
+    width: 100%;
+  }
+}
