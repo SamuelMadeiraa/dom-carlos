@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { CONFIG, gruposExpediente, nomeMarca } from '../config.js'
 import { useCatalogo, servicoPor, barbeiroPor } from '../dados/catalogo.js'
-import { agendar, horariosDoDia, hojeISO, linkWhatsapp, dinheiro } from '../dados/store.js'
+import { agendar, horariosDoDia, hojeISO, linkWhatsapp, dinheiro, aoMudar } from '../dados/store.js'
 import Reveal from './ui/Reveal.jsx'
 import { Poste, Pente, Navalha, Coroa, Tesoura } from './ui/Ilustracoes.jsx'
 
@@ -13,6 +13,14 @@ export default function Agendamento({ servicoPreSelecionado }) {
   const [form, setForm] = useState(VAZIO)
   const [erro, setErro] = useState('')
   const [feito, setFeito] = useState(null)
+  /* trava o botão enquanto o servidor responde: sem isso, dois cliques
+     rápidos viram duas reservas */
+  const [enviando, setEnviando] = useState(false)
+  /* a grade de horários vem da agenda compartilhada, que chega depois do
+     primeiro render — este contador redesenha quando ela aterrissa */
+  const [versaoAgenda, setVersaoAgenda] = useState(0)
+
+  useEffect(() => aoMudar(() => setVersaoAgenda((v) => v + 1)), [])
 
   const campo = (chave) => (e) => {
     setForm((f) => ({ ...f, [chave]: e.target.value }))
@@ -35,16 +43,21 @@ export default function Agendamento({ servicoPreSelecionado }) {
   const horarios = useMemo(
     () => horariosDoDia(form.data, form.barb),
     // feito entra na lista porque, depois de agendar, um horário some da grade
-    [form.data, form.barb, feito]
+    [form.data, form.barb, feito, versaoAgenda]
   )
 
   const servico = servicoPor(form.serv)
   const fechados = gruposExpediente().filter((g) => !g.aberto)
   const enderecoCompleto = [CONFIG.endereco, CONFIG.bairro].filter(Boolean)
 
-  const enviar = (e) => {
+  const enviar = async (e) => {
     e.preventDefault()
-    const r = agendar(form)
+    if (enviando) return
+
+    setEnviando(true)
+    const r = await agendar(form)
+    setEnviando(false)
+
     if (!r.ok) {
       setErro(r.erro)
       return
@@ -255,10 +268,11 @@ export default function Agendamento({ servicoPreSelecionado }) {
               <motion.button
                 type="submit"
                 className="btn btn--largo btn--grande"
-                whileHover={{ scale: 1.015 }}
-                whileTap={{ scale: 0.985 }}
+                disabled={enviando}
+                whileHover={enviando ? {} : { scale: 1.015 }}
+                whileTap={enviando ? {} : { scale: 0.985 }}
               >
-                Confirmar agendamento
+                {enviando ? 'Reservando…' : 'Confirmar agendamento'}
               </motion.button>
             </form>
           </Reveal>

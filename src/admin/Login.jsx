@@ -2,16 +2,38 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CONFIG } from '../config.js'
 import { Link } from '../router.jsx'
+import { guardarSenha, disponivel as naNuvem, conferirSenha } from '../dados/nuvem.js'
 import { Poste, Tesoura } from '../components/ui/Ilustracoes.jsx'
 
 export default function Login({ aoEntrar }) {
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState(false)
+  const [entrando, setEntrando] = useState(false)
 
-  const enviar = (e) => {
+  /**
+   * Com agenda na nuvem quem confere a senha é o servidor — é ele que guarda
+   * os dados dos clientes. Sem nuvem, sobra a checagem local de sempre.
+   */
+  const enviar = async (e) => {
     e.preventDefault()
-    if (senha === CONFIG.senhaAdmin) aoEntrar()
-    else setErro(true)
+    if (entrando) return
+
+    if (!naNuvem()) {
+      if (senha === CONFIG.senhaAdmin) aoEntrar(senha)
+      else setErro(true)
+      return
+    }
+
+    setEntrando(true)
+    guardarSenha(senha)
+    try {
+      await conferirSenha()
+      await aoEntrar(senha)
+    } catch {
+      guardarSenha('')
+      setErro(true)
+    }
+    setEntrando(false)
   }
 
   return (
@@ -60,8 +82,8 @@ export default function Login({ aoEntrar }) {
             </small>
           </label>
 
-          <button type="submit" className="btn btn--largo btn--grande">
-            Entrar
+          <button type="submit" className="btn btn--largo btn--grande" disabled={entrando}>
+            {entrando ? 'Entrando…' : 'Entrar'}
           </button>
 
           <Link para="/" className="login__voltar">

@@ -6,6 +6,7 @@ import { useCatalogo } from '../dados/catalogo.js'
 import {
   listar, aoMudar, resumo, receitaPorServico, receitaPorBarbeiro, agendaDeHoje,
   mudarStatus, excluir, limparTudo, exportarCsv, gerarExemplos, dinheiro, hojeISO, linkWhatsapp,
+  naNuvem, recarregarAgenda,
 } from '../dados/store.js'
 import { Barras, Rosca, Ranking } from './graficos.jsx'
 import Catalogo from './Catalogo.jsx'
@@ -31,6 +32,24 @@ export default function Painel({ aoSair }) {
     const t = setTimeout(() => setRecado(''), 3000)
     return () => clearTimeout(t)
   }, [recado])
+
+  /* com agenda compartilhada, o barbeiro deixa o painel aberto o dia todo:
+     uma busca por minuto faz a reserva nova aparecer sozinha */
+  useEffect(() => {
+    if (!naNuvem()) return
+    const t = setInterval(() => recarregarAgenda().catch(() => {}), 60000)
+    return () => clearInterval(t)
+  }, [])
+
+  /* toda ação do painel agora passa pela rede e pode falhar */
+  const tentar = async (acao, ok) => {
+    try {
+      await acao()
+      if (ok) setRecado(ok)
+    } catch {
+      setRecado('Não deu para salvar. Confira a conexão e tente de novo.')
+    }
+  }
 
   const dados = useMemo(
     () => ({
@@ -80,10 +99,7 @@ export default function Painel({ aoSair }) {
           <div className="painel__acoes">
             <button
               className="btn btn--vazio btn--pequeno"
-              onClick={() => {
-                gerarExemplos()
-                setRecado('Dados de exemplo gerados')
-              }}
+              onClick={() => tentar(gerarExemplos, 'Dados de exemplo gerados')}
             >
               Dados de exemplo
             </button>
@@ -105,7 +121,18 @@ export default function Painel({ aoSair }) {
 
       <div className="container painel__corpo">
         <h1>Visão geral</h1>
-        <p className="painel__sub">Acompanhe a agenda e o faturamento da barbearia.</p>
+        <p className="painel__sub">
+          Acompanhe a agenda e o faturamento da barbearia.{' '}
+          {naNuvem() ? (
+            <span className="selo-nuvem">
+              <i /> Agenda compartilhada — o que o cliente marca no site cai aqui
+            </span>
+          ) : (
+            <span className="selo-nuvem selo-nuvem--off">
+              <i /> Agenda só deste navegador — o banco não está configurado
+            </span>
+          )}
+        </p>
 
         <div className="kpis">
           {cartoes.map((c, i) => (
@@ -227,10 +254,8 @@ export default function Painel({ aoSair }) {
                 className="btn btn--vazio btn--pequeno"
                 onClick={() => {
                   if (!listar().length) return setRecado('Já está vazio')
-                  if (confirm('Isso vai apagar TODOS os agendamentos. Continuar?')) {
-                    limparTudo()
-                    setRecado('Tudo limpo')
-                  }
+                  if (confirm('Isso vai apagar TODOS os agendamentos. Continuar?'))
+                    tentar(limparTudo, 'Tudo limpo')
                 }}
               >
                 Limpar tudo
@@ -279,7 +304,7 @@ export default function Painel({ aoSair }) {
                         <select
                           className={`etiqueta-status ${STATUS[a.status].cls}`}
                           value={a.status}
-                          onChange={(e) => mudarStatus(a.id, e.target.value)}
+                          onChange={(e) => tentar(() => mudarStatus(a.id, e.target.value))}
                         >
                           {Object.entries(STATUS).map(([k, v]) => (
                             <option key={k} value={k}>
@@ -302,7 +327,10 @@ export default function Painel({ aoSair }) {
                           <button
                             className="botao-icone"
                             title="Excluir"
-                            onClick={() => confirm('Excluir este agendamento?') && excluir(a.id)}
+                            onClick={() =>
+                              confirm('Excluir este agendamento?') &&
+                              tentar(() => excluir(a.id), 'Agendamento excluído')
+                            }
                           >
                             ✕
                           </button>

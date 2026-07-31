@@ -1,20 +1,38 @@
 /**
  * Camada de dados dos agendamentos.
  *
- * Fica tudo em localStorage: o sistema roda sem back-end e sem banco, que é o
- * que mantém o custo do cliente na hospedagem estática. Se um dia precisar de
- * agenda compartilhada entre aparelhos, é este arquivo que troca de
- * implementação — nenhum componente fala com o localStorage direto.
+ * Trabalha em dois modos, decididos sozinho no boot:
+ *
+ * - **Nuvem** (`/api/agendamentos` respondendo): a agenda é a mesma para todo
+ *   mundo, então o que o cliente marca no celular dele aparece no painel do
+ *   barbeiro. É o modo normal em produção.
+ * - **Local** (sem banco configurado): cai no localStorage, como antes. Serve
+ *   para desenvolver e impede que o site do cliente saia do ar se o banco
+ *   estiver fora.
+ *
+ * Nenhum componente sabe em qual modo está — todos chamam as mesmas funções.
+ * Quem lê continua lendo de forma síncrona, de um retrato em memória; quem
+ * escreve é que virou assíncrono.
+ *
+ * Privacidade: o site público nunca baixa a agenda cheia. Para montar a grade
+ * de horários ele pede só a lista de "dia, hora e profissional ocupados" —
+ * nome e telefone de outros clientes só saem do servidor com a senha do
+ * painel.
  */
 import { CONFIG, STATUS } from '../config.js'
 import { servicos, barbeiros, servicoPor, barbeiroPor } from './catalogo.js'
+import * as nuvem from './nuvem.js'
 
 const CHAVE = CONFIG.chaveArmazenamento
 
 /* avisa a tela quando os dados mudam (o painel escuta pra se redesenhar) */
 const EVENTO = 'agendamentos-mudaram'
 
-export function listar() {
+const avisar = () => window.dispatchEvent(new Event(EVENTO))
+
+/* ------------------------------------------------------ retrato em memória */
+
+function lerLocal() {
   try {
     return JSON.parse(localStorage.getItem(CHAVE)) || []
   } catch {
@@ -22,15 +40,61 @@ export function listar() {
   }
 }
 
+/** agenda cheia: no modo local vem do navegador, na nuvem vem do servidor */
+let cache = lerLocal()
+/** só "dia + hora + profissional", que é o que o site público precisa saber */
+let tomados = []
+
+export function listar() {
+  return cache
+}
+
 export function gravar(lista) {
-  localStorage.setItem(CHAVE, JSON.stringify(lista))
-  window.dispatchEvent(new Event(EVENTO))
+  cache = lista
+  if (!nuvem.disponivel()) localStorage.setItem(CHAVE, JSON.stringify(lista))
+  avisar()
 }
 
 export function aoMudar(callback) {
   window.addEventListener(EVENTO, callback)
   return () => window.removeEventListener(EVENTO, callback)
 }
+
+export const naNuvem = () => nuvem.disponivel()
+
+/* ------------------------------------------------------------ boot / sync */
+
+/**
+ * Descobre o modo e carrega o que dá sem senha. Chamado uma vez no arranque.
+ */
+export async function iniciar() {
+  await nuvem.verificar()
+  if (nuvem.disponivel()) {
+    cache = [] // a agenda cheia só chega depois do login
+    await recarregarOcupados()
+  }
+  avisar()
+}
+
+async function recarregarOcupados() {
+  try {
+    tomados = await nuvem.buscarOcupados()
+  } catch {
+    /* rede caiu no meio: seguimos com a última grade conhecida */
+  }
+}
+
+/** Puxa a agenda completa do servidor. Só funciona depois do login. */
+export async function recarregarAgenda() {
+  if (!nuvem.disponivel()) return
+  cache = await nuvem.buscarAgenda()
+  tomados = cache
+    .filter((a) => a.status !== 'canc')
+    .map((a) => ({ data: a.data, hora: a.hora, barb: a.barb }))
+  avisar()
+}
+
+/* --------------------------------------------------------------- horários */
 
 /** Data de hoje em AAAA-MM-DD, respeitando o fuso local (não o UTC). */
 export function hojeISO() {
@@ -44,7 +108,10 @@ export const dinheiro = (v) => 'R$ ' + Number(v).toLocaleString('pt-BR')
 /** Horários já tomados de um profissional num dia (cancelado não conta). */
 export function ocupados(data, barbeiroId) {
   if (!barbeiroId) return []
-  return listar()
+  if (nuvem.disponivel())
+    return tomados.filter((t) => t.data === data && t.barb === barbeiroId).map((t) => t.hora)
+
+  return cache
     .filter((a) => a.data === data && a.barb === barbeiroId && a.status !== 'canc')
     .map((a) => a.hora)
 }
@@ -55,26 +122,31 @@ export function horariosDoDia(data, barbeiroId) {
   const faixa = CONFIG.expediente[new Date(data + 'T00:00:00').getDay()]
   if (!faixa) return []
 
-  const tomados = ocupados(data, barbeiroId)
+  const jaTomados = ocupados(data, barbeiroId)
   const lista = []
   for (let min = faixa[0] * 60; min < faixa[1] * 60; min += CONFIG.intervaloMin) {
     const hora = `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`
-    lista.push({ hora, livre: !tomados.includes(hora) })
+    lista.push({ hora, livre: !jaTomados.includes(hora) })
   }
   return lista
 }
 
 export const abertoEm = (data) => !!CONFIG.expediente[new Date(data + 'T00:00:00').getDay()]
 
+/* -------------------------------------------------------------- marcar */
+
 /**
  * Grava um agendamento. Devolve { ok, erro, agendamento }.
  * Sem profissional escolhido, aloca o primeiro que estiver livre no horário.
  */
-export function agendar({ nome, tel, serv, barb, data, hora, obs }) {
+export async function agendar({ nome, tel, serv, barb, data, hora, obs }) {
   if (!nome || !tel || !serv || !data || !hora)
     return { ok: false, erro: 'Preencha todos os campos obrigatórios.' }
 
   if (!abertoEm(data)) return { ok: false, erro: 'Não atendemos nesse dia. Escolha outra data.' }
+
+  /* na nuvem, a grade pode ter envelhecido enquanto a pessoa preenchia */
+  if (nuvem.disponivel()) await recarregarOcupados()
 
   let escolhido = barb
   if (!escolhido) {
@@ -105,19 +177,52 @@ export function agendar({ nome, tel, serv, barb, data, hora, obs }) {
     criadoEm: new Date().toISOString(),
   }
 
-  gravar([...listar(), agendamento])
+  if (nuvem.disponivel()) {
+    try {
+      const r = await nuvem.marcar(agendamento)
+      await recarregarOcupados()
+      avisar()
+      return { ok: true, agendamento: r.agendamento || agendamento }
+    } catch (e) {
+      /* 409 é a corrida por horário: a mensagem do servidor já explica */
+      if (e.status === 409) return { ok: false, erro: e.message }
+      return {
+        ok: false,
+        erro: 'Não conseguimos falar com a agenda agora. Tente de novo em instantes.',
+      }
+    }
+  }
+
+  gravar([...cache, agendamento])
   return { ok: true, agendamento }
 }
 
-export function mudarStatus(id, status) {
-  gravar(listar().map((a) => (a.id === id ? { ...a, status } : a)))
+/* --------------------------------------------------------- ações do painel */
+
+export async function mudarStatus(id, status) {
+  if (nuvem.disponivel()) {
+    await nuvem.trocarStatus(id, status)
+    await recarregarAgenda()
+    return
+  }
+  gravar(cache.map((a) => (a.id === id ? { ...a, status } : a)))
 }
 
-export function excluir(id) {
-  gravar(listar().filter((a) => a.id !== id))
+export async function excluir(id) {
+  if (nuvem.disponivel()) {
+    await nuvem.apagar(id)
+    await recarregarAgenda()
+    return
+  }
+  gravar(cache.filter((a) => a.id !== id))
 }
 
-export function limparTudo() {
+export async function limparTudo() {
+  if (nuvem.disponivel()) {
+    await nuvem.apagarTudo()
+    await recarregarAgenda()
+    return
+  }
   gravar([])
 }
 
@@ -163,12 +268,14 @@ export function receitaPorServico() {
 
 export function receitaPorBarbeiro() {
   const at = ativos(listar())
-  return barbeiros().map((b) => ({
-    id: b.id,
-    nome: b.nome,
-    total: at.filter((a) => a.barb === b.id).reduce((x, a) => x + a.preco, 0),
-    n: at.filter((a) => a.barb === b.id).length,
-  })).sort((x, y) => y.total - x.total)
+  return barbeiros()
+    .map((b) => ({
+      id: b.id,
+      nome: b.nome,
+      total: at.filter((a) => a.barb === b.id).reduce((x, a) => x + a.preco, 0),
+      n: at.filter((a) => a.barb === b.id).length,
+    }))
+    .sort((x, y) => y.total - x.total)
 }
 
 export function agendaDeHoje() {
@@ -204,13 +311,13 @@ export function exportarCsv() {
 }
 
 /** Agenda fictícia para demonstrar o painel cheio numa reunião. */
-export function gerarExemplos() {
+export async function gerarExemplos() {
   const nomes = [
     'João Vitor', 'Marcelo Souza', 'Diego Ramos', 'Anderson Luiz',
     'Felipe Cardoso', 'Bruno Martins', 'Rodrigo Alves', 'Tiago Nunes',
     'Wesley Prado', 'Caio Ferreira', 'Igor Bastos', 'Murilo Reis',
   ]
-  const lista = listar()
+  const lista = [...listar()]
   const base = new Date()
   const cardapio = servicos()
   const equipe = barbeiros()
@@ -252,5 +359,10 @@ export function gerarExemplos() {
     })
   })
 
+  if (nuvem.disponivel()) {
+    await nuvem.substituir(lista)
+    await recarregarAgenda()
+    return
+  }
   gravar(lista)
 }

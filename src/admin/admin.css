@@ -106,6 +106,35 @@
   margin-top: 4px;
 }
 
+/* diz de onde vem a agenda: da nuvem (todo mundo vê o mesmo) ou só daqui */
+.selo-nuvem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 4px;
+  padding: 4px 12px 4px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--traco);
+  background: var(--superficie);
+  color: var(--ouro-claro);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.selo-nuvem i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ouro-claro);
+  box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.18);
+}
+.selo-nuvem--off {
+  color: var(--texto-mudo);
+}
+.selo-nuvem--off i {
+  background: var(--texto-mudo);
+  box-shadow: none;
+}
+
 /* ------------------------------------------------------------------ kpis */
 .kpis {
   display: grid;
